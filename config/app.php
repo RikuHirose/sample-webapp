@@ -52,9 +52,9 @@ return [
     |
     */
 
-    // 'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'http://localhost:8000'),
 
-    'url' => empty($_SERVER["HTTPS"]) ? "http://" . $_SERVER["HTTP_HOST"] : "https://" . $_SERVER["HTTP_HOST"],
+    'asset_name' => "app",
 
     'asset_url' => env('ASSET_URL', null),
 

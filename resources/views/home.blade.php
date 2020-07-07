@@ -14,7 +14,9 @@
                         </div>
                     @endif
 
-                    {{ config('app.url') }}
+                    URL: {{ config('app.url') }}
+
+                    AssetName: {{ config('app.asset_name') }}
                 </div>
             </div>
         </div>

@@ -36,4 +36,8 @@ mix.webpackConfig({
 })
 
 mix.js('resources/assets/js/app.js', 'public/js')
+    .js('resources/assets/js/me.js', 'public/js')
+    .js('resources/assets/js/work.js', 'public/js')
     .sass('resources/assets/sass/app.scss', 'public/css')
+    .sass('resources/assets/sass/me.scss', 'public/css')
+    .sass('resources/assets/sass/work.scss', 'public/css')
