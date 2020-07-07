@@ -28,8 +28,8 @@ class AppServiceProvider extends ServiceProvider
 
         if (config('app.env') === 'production') {
             // asset()やurl()がhttpsで生成される
-            URL::forceScheme('http');
-            // URL::forceScheme('https');
+            // URL::forceScheme('http');
+            URL::forceScheme('https');
         }
     }
 }
