@@ -31,19 +31,19 @@ class AppServiceProvider extends ServiceProvider
             // URL::forceScheme('http');
             URL::forceScheme('https');
 
-            $appUrl = empty($_SERVER["HTTPS"]) ? "http://" . $_SERVER["HTTP_HOST"] : "https://" . $_SERVER["HTTP_HOST"];
+            $appUrl = empty($_SERVER["HTTPS"]) ? "http://" . url('/') : "https://" . url('/');
 
             \Config::set('app.url', $appUrl);
 
-            if (empty($_SERVER["HTTP_HOST"])) {
+            if (empty(url('/'))) {
                 \Config::set('app.asset_name', "app");
             }
 
-            if ($_SERVER["HTTP_HOST"] === "eco-hack.work/") {
+            if (url('/') === "eco-hack.work/") {
                 \Config::set('app.asset_name', "work");
             }
 
-            if ($_SERVER["HTTP_HOST"] === "eco-hack.me/") {
+            if (url('/') === "eco-hack.me/") {
                 \Config::set('app.asset_name', "me");
             }
         }
