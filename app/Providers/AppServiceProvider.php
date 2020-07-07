@@ -24,26 +24,24 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        URL::forceRootUrl(config('app.url'));
-
         if (config('app.env') === 'production') {
             // asset()やurl()がhttpsで生成される
             // URL::forceScheme('http');
             URL::forceScheme('https');
 
             // $appUrl = empty($_SERVER["HTTPS"]) ? "http://" . url('/') : "https://" . url('/');
-
+            URL::forceRootUrl(config('app.url'));
             \Config::set('app.url', url('/'));
 
             if (empty(url('/'))) {
                 \Config::set('app.asset_name', "app");
             }
 
-            if (url('/') === "https://eco-hack.work/") {
+            if (strpos(url()->current(),'https://eco-hack.work') !== false){
                 \Config::set('app.asset_name', "work");
             }
 
-            if (url('/') === "https://eco-hack.me/") {
+            if (strpos(url()->current(),'https://eco-hack.me') !== false){
                 \Config::set('app.asset_name', "me");
             }
         }
