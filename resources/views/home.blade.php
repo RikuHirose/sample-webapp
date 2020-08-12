@@ -17,6 +17,13 @@
                     URL: {{ config('app.url') }}
 
                     AssetName: {{ config('app.asset_name') }}
+
+                    <form method="POST" action="{{ route('store') }}" enctype='multipart/form-data'>
+                        {{ csrf_field() }}
+
+                        <input type="file" name="file" accept="mp4">
+                        <button type="submit">submit</button>
+                    </form>
                 </div>
             </div>
         </div>
