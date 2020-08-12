@@ -7,13 +7,16 @@ use FFMpeg;
 use FFMpeg\Format\Video\X264;
 use Storage;
 
+use App\Jobs\Hoge;
+use App\Models\Job;
+
 class HomeController extends Controller
 {
     protected $disk;
 
     public function __construct(
     ) {
-        $this->disk           = Storage::disk('s3');
+        $this->disk = Storage::disk('s3');
     }
 
     /**
@@ -25,6 +28,11 @@ class HomeController extends Controller
     {
         \SeoHelper::setIndexSeo();
         return view('home');
+    }
+
+    public function show(Request $request)
+    {
+        Hoge::dispatch()->delay(10);
     }
 
     public function store(Request $request)
