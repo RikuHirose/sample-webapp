@@ -6,23 +6,23 @@
 
 updateSupervisor(){
     cp /var/app/current/supervisord.conf /etc/supervisord.conf
-    sudo service supervisord stop
-    php /var/app/current/artisan queue:restart # If this worker is running in daemon mode (most likely) we need to restart it with the new build
-    echo "Sleeping a few seconds to make sure supervisor shuts down..." # https://github.com/Supervisor/supervisor/issues/48#issuecomment-2684400
-    sleep 5
-    sudo service supervisord start
+    # sudo service supervisord stop
+    # php /var/app/current/artisan queue:restart # If this worker is running in daemon mode (most likely) we need to restart it with the new build
+    # echo "Sleeping a few seconds to make sure supervisor shuts down..." # https://github.com/Supervisor/supervisor/issues/48#issuecomment-2684400
+    # sleep 5
+    # sudo service supervisord start
 }
 
 installSupervisor(){
     pip install --install-option="--install-scripts=/usr/bin" supervisor --pre
-    cp /var/app/current/supervisord /etc/init.d/supervisord
-    chmod 777 /etc/init.d/supervisord
-    mkdir -m 766 /var/log/supervisor
-    umask 022
-    touch /var/log/supervisor/supervisord.log
+    # sudo cp /var/app/current/supervisord /etc/init.d/supervisord
+    # chmod 777 /etc/init.d/supervisord
+    # mkdir -m 766 /var/log/supervisor
+    # umask 022
+    # touch /var/log/supervisor/supervisord.log
     cp /var/app/current/supervisord.conf /etc/supervisord.conf
-    /etc/init.d/supervisord  start
-    sudo chkconfig supervisord  on
+    # /etc/init.d/supervisord  start
+    # sudo chkconfig supervisord  on
 }
 
 #if key exists and is true
