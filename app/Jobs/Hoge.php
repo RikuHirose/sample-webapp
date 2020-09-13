@@ -29,7 +29,7 @@ class Hoge implements ShouldQueue
      */
     public function handle()
     {
-        \Log::info('hogehogehogehogehoge');
+        \Log::channel('slack')->error('test job');
     }
 
      /**

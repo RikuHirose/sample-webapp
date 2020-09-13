@@ -22,7 +22,8 @@ installSupervisor(){
     # umask 022
     # touch /var/log/supervisor/supervisord.log
     cp /var/app/current/supervisord.conf /etc/supervisord.conf
-    cp /var/app/current/supervisord.service /etc/systemd/system/supervisord.service
+    sudo cp /var/app/current/supervisord.service /etc/systemd/system/supervisord.service
+    sudo systemctl start supervisord
     # /etc/init.d/supervisord  start
     # sudo chkconfig supervisord  on
 }
