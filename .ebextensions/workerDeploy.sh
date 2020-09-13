@@ -25,42 +25,18 @@ installSupervisor(){
     sudo chkconfig supervisord  on
 }
 
-/opt/elasticbeanstalk/bin/get-config environment --output yaml | sed -n '1!p' | sed -e 's/^\(.*\): /\1=/g' > bashEnv
-
-declare -A ary
-
-readarray -t lines < "bashEnv"
-
-for line in "${lines[@]}"; do
-   key=${line%%=*}
-   value=${line#*=}
-   ary[$key]=$value
-done
-
 #if key exists and is true
 
-if test "${ary['IS_WORKER']+isset}" #if key exists
+echo "Found worker key!"
+echo "Starting worker deploy process...";
+
+if [ -f /etc/init.d/supervisord ];
     then
-        if [ ${ary['IS_WORKER']} == "'true'" ] #if the value is true
-            then
-                echo "Found worker key!"
-                echo "Starting worker deploy process...";
-
-                if [ -f /etc/init.d/supervisord ];
-                    then
-                       echo "Config found. Supervisor already installed"
-                       updateSupervisor
-                    else
-                       echo "No supervisor config found. Installing supervisor..."
-                       installSupervisor
-                    fi
-
-                echo "Deployment done!"
-
-            else
-                echo "Worker variable set, but not true. Skipping worker installation";
-        fi;
-
+       echo "Config found. Supervisor already installed"
+       updateSupervisor
     else
-        echo "No worker variable found. Skipping worker installation";
-fi;
+       echo "No supervisor config found. Installing supervisor..."
+       installSupervisor
+    fi;
+
+echo "Deployment done!"
