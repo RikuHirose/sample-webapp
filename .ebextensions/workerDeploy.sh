@@ -14,13 +14,15 @@ updateSupervisor(){
 }
 
 installSupervisor(){
-    pip install --install-option="--install-scripts=/usr/bin" supervisor --pre
+    sudo easy_install pip
+    pip install supervisor
     # sudo cp /var/app/current/supervisord /etc/init.d/supervisord
     # chmod 777 /etc/init.d/supervisord
     # mkdir -m 766 /var/log/supervisor
     # umask 022
     # touch /var/log/supervisor/supervisord.log
     cp /var/app/current/supervisord.conf /etc/supervisord.conf
+    cp /var/app/current/supervisord.service /etc/systemd/system/supervisord.service
     # /etc/init.d/supervisord  start
     # sudo chkconfig supervisord  on
 }
