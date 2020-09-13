@@ -32,13 +32,15 @@ installSupervisor(){
 echo "Found worker key!"
 echo "Starting worker deploy process...";
 
-if [ -f /etc/init.d/supervisord ];
-    then
-       echo "Config found. Supervisor already installed"
-       updateSupervisor
-    else
-       echo "No supervisor config found. Installing supervisor..."
-       installSupervisor
-    fi;
+installSupervisor
+
+# if [ -f /etc/init.d/supervisord ];
+#     then
+#        echo "Config found. Supervisor already installed"
+#        updateSupervisor
+#     else
+#        echo "No supervisor config found. Installing supervisor..."
+#        installSupervisor
+#     fi;
 
 echo "Deployment done!"
