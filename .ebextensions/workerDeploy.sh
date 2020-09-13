@@ -5,7 +5,7 @@
 #              or update supervisord depending on environmental variables set in EB.
 
 updateSupervisor(){
-    cp .ebextensions/supervisord.conf /etc/supervisord.conf
+    cp /var/app/current/supervisord.conf /etc/supervisord.conf
     sudo service supervisord stop
     php /var/app/current/artisan queue:restart # If this worker is running in daemon mode (most likely) we need to restart it with the new build
     echo "Sleeping a few seconds to make sure supervisor shuts down..." # https://github.com/Supervisor/supervisor/issues/48#issuecomment-2684400
@@ -15,12 +15,12 @@ updateSupervisor(){
 
 installSupervisor(){
     pip install --install-option="--install-scripts=/usr/bin" supervisor --pre
-    cp /var/app/ondeck/.ebextensions/supervisord /etc/init.d/supervisord
+    cp /var/app/current/supervisord /etc/init.d/supervisord
     chmod 777 /etc/init.d/supervisord
     mkdir -m 766 /var/log/supervisor
     umask 022
     touch /var/log/supervisor/supervisord.log
-    cp .ebextensions/supervisord.conf /etc/supervisord.conf
+    cp /var/app/current/supervisord.conf /etc/supervisord.conf
     /etc/init.d/supervisord  start
     sudo chkconfig supervisord  on
 }
