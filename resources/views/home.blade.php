@@ -24,6 +24,8 @@
                         <input type="file" name="file" accept="mp4">
                         <button type="submit">submit</button>
                     </form>
+
+                    <a href="{{ route('show') }}">test job</a>
                 </div>
             </div>
         </div>

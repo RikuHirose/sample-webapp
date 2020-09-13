@@ -11,6 +11,11 @@ updateSupervisor(){
     # echo "Sleeping a few seconds to make sure supervisor shuts down..." # https://github.com/Supervisor/supervisor/issues/48#issuecomment-2684400
     # sleep 5
     # sudo service supervisord start
+
+    sudo systemctl stop supervisord
+    php /var/app/current/artisan queue:restart
+    sleep 5
+    sudo systemctl start supervisord
 }
 
 installSupervisor(){
@@ -33,15 +38,13 @@ installSupervisor(){
 echo "Found worker key!"
 echo "Starting worker deploy process...";
 
-installSupervisor
-
-# if [ -f /etc/init.d/supervisord ];
-#     then
-#        echo "Config found. Supervisor already installed"
-#        updateSupervisor
-#     else
-#        echo "No supervisor config found. Installing supervisor..."
-#        installSupervisor
-#     fi;
+if [ -f /etc/init.d/supervisord ];
+    then
+       echo "Config found. Supervisor already installed"
+       updateSupervisor
+    else
+       echo "No supervisor config found. Installing supervisor..."
+       installSupervisor
+    fi;
 
 echo "Deployment done!"
