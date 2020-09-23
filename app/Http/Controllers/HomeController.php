@@ -93,33 +93,55 @@ class HomeController extends Controller
             //     echo "\n";
             // }
 
-            $mediaConvertClient = new MediaConvertClient([
-                'version' => '2017-08-29',
-                'region' => config('filesystems.disks.s3.region'),
-                'profile' => 'default',
-                // 'endpoint' => $single_endpoint_url
-            ]);
+            // $mediaConvertClient = new MediaConvertClient([
+            //     'version' => '2017-08-29',
+            //     'region' => config('filesystems.disks.s3.region'),
+            //     'profile' => 'default',
+            //     // 'endpoint' => $single_endpoint_url
+            // ]);
 
-            $jobSetting = json_decode(file_get_contents(base_path('MediaConvert.json')), true);
+            // $jobSetting = json_decode(file_get_contents(base_path('MediaConvert.json')), true);
 
-            try {
-                $result = $mediaConvertClient->createJob([
-                    "Role"     => "arn:aws:iam::818711851313:role/MediaConvert_Default_Role",
-                    "Settings" => $jobSetting, //JobSettings structure
-                    "Queue"    => "arn:aws:mediaconvert:ap-northeast-1:818711851313:queues/Default",
-                    // 'credentials' => [
-                    //        'key' => config('filesystems.disks.s3.key'),
-                    //        'secret' => config('filesystems.disks.s3.secret'),
-                    // ],
-                ]);
-                dd($result);
-            } catch (AwsException $e) {
-                // output error message if fails
-                echo $e->getMessage();
-                echo "\n";
-            }
+            // try {
+            //     $result = $mediaConvertClient->createJob([
+            //         "Role"     => "arn:aws:iam::818711851313:role/MediaConvert_Default_Role",
+            //         "Settings" => $jobSetting, //JobSettings structure
+            //         "Queue"    => "arn:aws:mediaconvert:ap-northeast-1:818711851313:queues/Default",
+            //         // 'credentials' => [
+            //         //        'key' => config('filesystems.disks.s3.key'),
+            //         //        'secret' => config('filesystems.disks.s3.secret'),
+            //         // ],
+            //     ]);
+            //     dd($result);
+            // } catch (AwsException $e) {
+            //     // output error message if fails
+            //     echo $e->getMessage();
+            //     echo "\n";
+            // }
         }
 
+    }
+
+    public function download(Request $request)
+    {
+        $this->disk = Storage::disk('s3');
+        // １．ファイルの名前をURIや、リクエストなどで渡す
+        $file_name = '名称未設定のデザイン (1).png';
+        // ２．アップロードしたいディレクトリのパス
+        $s3_dir_pash = '';
+
+        // １と２をあわせて、アップロード先パスを指定
+        $s3_file_pash = $s3_dir_pash.$file_name; //'upload/5007.jpg'
+
+        // ダウンロードする際のファイル名を、Content-Dispositionで指定
+        $headers = [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $file_name . '"'
+        ];
+
+        // dd($this->disk->exists('名称未設定のデザイン (1).png'));
+
+        return \Response::make($this->disk->get($s3_file_pash), 200, $headers);
     }
 
     private function getFileName($requestFile, $fileExtension)

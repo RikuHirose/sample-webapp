@@ -26,6 +26,13 @@
                     </form>
 
                     <a href="{{ route('show') }}">test job</a>
+
+                    <form method="POST" action="{{ route('download') }}" enctype='multipart/form-data'>
+                        {{ csrf_field() }}
+
+                        <button type="submit">download</button>
+                    </form>
+
                 </div>
             </div>
         </div>
