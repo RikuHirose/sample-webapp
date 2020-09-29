@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use FFMpeg;
 use FFMpeg\Format\Video\X264;
+use Illuminate\Http\File;
 use Storage;
 
 use App\Jobs\Hoge;
@@ -104,9 +105,9 @@ class HomeController extends Controller
 
             // try {
             //     $result = $mediaConvertClient->createJob([
-            //         "Role"     => "arn:aws:iam::818711851313:role/MediaConvert_Default_Role",
+            //         "Role"     => "arn:aws:iam::xxxx:role/MediaConvert_Default_Role",
             //         "Settings" => $jobSetting, //JobSettings structure
-            //         "Queue"    => "arn:aws:mediaconvert:ap-northeast-1:818711851313:queues/Default",
+            //         "Queue"    => "arn:aws:mediaconvert:ap-northeast-1:xxxx:queues/Default",
             //         // 'credentials' => [
             //         //        'key' => config('filesystems.disks.s3.key'),
             //         //        'secret' => config('filesystems.disks.s3.secret'),
@@ -120,6 +121,28 @@ class HomeController extends Controller
             // }
         }
 
+    }
+
+    public function uploadChunk(Request $request)
+    {
+        $file = $request->file('file');
+
+        $path = Storage::disk('local')->path("chunks/{$file->getClientOriginalName()}");
+
+        \Illuminate\Support\Facades\File::append($path, $file->get());
+
+        if ($request->has('is_last') && (bool)$request->input('is_last')) {
+            dd($request->input('is_last'));
+            // dd(Storage::disk('local')->exists('chunks/720.m4v.part'));
+            // $name = basename($path, '.part');
+            // Storage::move($path, "public/{$name}");
+
+            // $requestFile = new \Illuminate\Http\File($path);
+            // $originalPath = $this->disk->putFileAs('artist-files/', $requestFile, $file->getClientOriginalName(), 'public');
+        }
+
+
+        return response()->json(['uploaded' => true]);
     }
 
     public function download(Request $request)
