@@ -34,6 +34,8 @@
                     </form>
 
                 </div>
+
+                <chunk-uploader></chunk-uploader>
             </div>
         </div>
     </div>

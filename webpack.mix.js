@@ -16,23 +16,23 @@ mix.webpackConfig({
   module: {
     rules: [
       {
-        enforce: 'pre',
-        exclude: /node_modules/,
-        loader: 'eslint-loader',
-        test: /\.(js|vue)?$/
+        // enforce: 'pre',
+        // exclude: /node_modules/,
+        // loader: 'eslint-loader',
+        // test: /\.(js|vue)?$/
       },
     ]
   },
-  plugins: [
-    new CopyWebpackPlugin(
-      [
-        {
-          from: "./resources/assets/images/",
-          to:   "images/"
-        }
-      ]
-    )
-  ]
+  // plugins: [
+  //   new CopyWebpackPlugin(
+  //     [
+  //       {
+  //         from: "./resources/assets/images/",
+  //         to:   "images/"
+  //       }
+  //     ]
+  //   )
+  // ]
 })
 
 mix.js('resources/assets/js/app.js', 'public/js')
