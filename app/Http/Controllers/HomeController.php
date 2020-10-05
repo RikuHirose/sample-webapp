@@ -36,6 +36,7 @@ class HomeController extends Controller
     public function show(Request $request)
     {
         Hoge::dispatch()->delay(10);
+        
     }
 
     public function store(Request $request)
