@@ -16,8 +16,8 @@
         "cross-env": "^5.1",
         "eslint": "^6.1.0",
         "eslint-loader": "^2.2.1",
-        "eslint-utils": ">=1.4.1",
         "eslint-plugin-vue": "^5.2.3",
+        "eslint-utils": ">=1.4.1",
         "jquery": "^3.2",
         "laravel-mix": "^4.0.7",
         "lodash": "^4.17.13",
@@ -29,6 +29,9 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
-        "copy-webpack-plugin": "^5.1.1"
+        "copy-webpack-plugin": "^5.1.1",
+        "vue-simple-uploader": "^0.7.6",
+        "vue-upload-component": "^2.8.20",
+        "vuejs-uploader": "^0.6.5"
     }
 }

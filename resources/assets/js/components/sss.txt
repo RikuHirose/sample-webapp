@@ -1,0 +1,137 @@
+<template>
+    <uploader
+        :options="options"
+        :file-status-text="statusText"
+        :categoryMap="categoryMap"
+        class="uploader-example"
+        ref="uploader"
+        @file-added="onFileAdded"
+        @file-success="onFileSuccess"
+        @file-progress="onFileProgress"
+        @file-error="onFileError"
+    >
+        <uploader-unsupport></uploader-unsupport>
+        <uploader-drop>
+            <p>Drop files here to upload or</p>
+            <uploader-btn :attrs="attrs" :single="true"
+                >select files</uploader-btn
+            >
+        </uploader-drop>
+        <uploader-list></uploader-list>
+    </uploader>
+</template>
+
+<script>
+// see https://www.cnblogs.com/xiahj/p/vue-simple-uploader.html
+export default {
+    data() {
+        return {
+            options: {
+                target: '/api/uploadChunk',
+                testChunks: false,
+                singleFile: true,
+                // 10MBごとにfileをchunkする
+                chunkSize: 10 * 1024 * 1024,
+                query: {
+                    artist_id: this.artistId,
+                },
+                headers: {
+                    // Authorization: "Bearer " + access_token
+                },
+            },
+            attrs: {
+                accept: 'video/*',
+            },
+            categoryMap: {
+                video: [
+                    'mp4',
+                    'm3u8',
+                    'rmvb',
+                    'avi',
+                    'swf',
+                    '3gp',
+                    'mkv',
+                    'flv',
+                ],
+            },
+            statusText: {
+                success: 'success',
+                error: 'error',
+                uploading: 'uploading',
+                paused: 'paused',
+                waiting: 'waiting',
+            },
+            maxMBSize: 1000,
+        }
+    },
+    methods: {
+        onFileAdded(file) {
+            if (this.covertBytetoMB(file.size) > this.maxMBSize) {
+                this.$toasted.show(
+                    `${this.maxMBSize}MB以下のファイルをアップロードしてください`,
+                    { type: 'error' }
+                )
+
+                file.pause()
+                window.uploader.removeFile(file)
+            }
+        },
+        // 文件进度的回调
+        onFileProgress(rootFile, file, chunk) {},
+        onFileSuccess(rootFile, file, response, chunk) {
+            this.$toasted.show('upload成功しました', { type: 'success' })
+            let res = JSON.parse(response)
+            this.commitFile(res.file.id, res.thumbnail_id)
+        },
+
+        onFileError(rootFile, file, response, chunk) {
+            // console.log(error)
+        },
+
+        covertBytetoMB(size) {
+            return Math.round(size / 100000) / 10
+        },
+
+        commitFile(fileId, thumbnailFileId) {
+            this.$emit('input', {
+                fileId: fileId,
+                thumbnailFileId: thumbnailFileId,
+            })
+        },
+
+         async inputFilter(newFile, oldFile, prevent) {
+            if (newFile && !oldFile) {
+
+                newFile.fileId = await this.uploadImage(newFile)
+
+                if (this.uploadableFileNumber !== 0) {
+                    this.uploadableFileNumber = this.uploadableFileNumber - 1
+                }
+            }
+        },
+    },
+    mounted() {
+        this.$nextTick(() => {
+            window.uploader = this.$refs.uploader.uploader
+        })
+    },
+}
+</script>
+
+<style>
+.uploader-example {
+    width: 100%;
+    margin: 40px auto 0;
+    font-size: 12px;
+}
+.uploader-example .uploader-btn {
+    margin-right: 4px;
+}
+.uploader-example .uploader-list {
+    max-height: 440px;
+    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+</style>

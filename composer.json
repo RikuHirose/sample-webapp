@@ -18,7 +18,8 @@
         "laravel/slack-notification-channel": "^2.2",
         "laravel/tinker": "^1.0",
         "league/flysystem-aws-s3-v3": "^1.0",
-        "pbmedia/laravel-ffmpeg": "^7.0"
+        "pbmedia/laravel-ffmpeg": "^7.0",
+        "pion/laravel-chunk-upload": "^1.4"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

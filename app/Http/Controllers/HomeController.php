@@ -13,6 +13,11 @@ use App\Models\Job;
 use Aws\MediaConvert\MediaConvertClient;
 use Aws\Exception\AwsException;
 
+use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
+use Pion\Laravel\ChunkUpload\Handler\AbstractHandler;
+use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
+use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
+
 class HomeController extends Controller
 {
     protected $disk;
@@ -124,26 +129,107 @@ class HomeController extends Controller
 
     }
 
+    private function chunkUploadStart(Request $request)
+    {
+        return response()->json([
+            'data' => [
+                'end_offset' => 1,
+                'session_id' => '61db8102-fca6-44ae-81e2-a499d438e7a5ss',
+            ],
+            'status' => "success"
+        ]);
+    }
+
+    private function chunkUploadPart(Request $request)
+    {
+
+        $file = $request->file('chunk');
+        // $fileExtension     = $file->getClientOriginalExtension();
+
+        $path = Storage::disk('local')->path("chunks/ssssss");
+        // $path = Storage::disk('local')->path("chunks/{$request->file('name')}");
+        // $path = Storage::disk('local')->path("chunks/{$file->getClientOriginalName()}");
+
+        \Illuminate\Support\Facades\File::append($path, $file);
+
+        return response()->json([
+            'status' => "success"
+        ]);
+    }
+
+    private function chunkUploadFinish(Request $request)
+    {
+        // dd($request->all());
+        return response()->json([
+            'status' => "success"
+        ]);
+    }
+
     public function uploadChunk(Request $request)
     {
         $file = $request->file('file');
+
+        $fileExtension     = $file->getClientOriginalExtension();
 
         $path = Storage::disk('local')->path("chunks/{$file->getClientOriginalName()}");
 
         \Illuminate\Support\Facades\File::append($path, $file->get());
 
         if ($request->has('is_last') && (bool)$request->input('is_last')) {
-            dd($request->input('is_last'));
-            // dd(Storage::disk('local')->exists('chunks/720.m4v.part'));
-            // $name = basename($path, '.part');
-            // Storage::move($path, "public/{$name}");
+            if ($request->input('is_last') == 'false') {
+                dd($request->all());
+            }
 
-            // $requestFile = new \Illuminate\Http\File($path);
-            // $originalPath = $this->disk->putFileAs('artist-files/', $requestFile, $file->getClientOriginalName(), 'public');
+
+            if ($request->input('is_last') == 'true') {
+                $requestFile = new \Illuminate\Http\File($path);
+
+                // $originalPath = $this->disk->putFileAs('artist-files/', $requestFile, $file->getClientOriginalName(), 'public');
+                $originalPath = $this->disk->putFileAs('artist-files/', $requestFile, 'test.mp4', 'public');
+            }
         }
 
 
-        return response()->json(['uploaded' => true]);
+        // $receiver = new FileReceiver('file', $request, HandlerFactory::classFromRequest($request));
+
+        // // check if the upload is success, throw exception or return response you need
+        // if ($receiver->isUploaded() === false) {
+        //     throw new UploadMissingFileException();
+        // }
+
+        // // receive the file
+        // $save = $receiver->receive();
+        // \Log::info($save->getFile());
+
+        // // check if the upload has finished (in chunk mode it will send smaller files)
+        // if ($save->isFinished()) {
+        //     // save the file and return any response you need, current example uses `move` function. If you are
+        //     // not using move, you need to manually delete the file by unlink($save->getFile()->getPathname())
+        //     \Log::info($save->getFile());
+
+        //     // $originalPath = $this->disk->putFileAs('artist-files/', $requestFile, $file->getClientOriginalName(), 'public');
+        //     $originalPath = $this->disk->putFileAs('artist-files/', $save->getFile(), 'larastagram_auth_2.mp4', 'public');
+
+        //     \Log::info($originalPath);
+        //     // unlink($save->getFile()->getPathname());
+
+        //     return response()->json(['uploaded' => true]);
+        // }
+
+        // // we are in chunk mode, lets send the current progress
+        // /** @var AbstractHandler $handler */
+        // $handler = $save->handler();
+
+        // // \Log::info($handler->getCurrentChunk());
+        // // \Log::info($handler->getPercentageDone().'%');
+
+        // return response()->json([
+        //     'done'   => $handler->getPercentageDone(),
+        //     'status' => true,
+        // ]);
+
+
+        // return response()->json(['uploaded' => true]);
     }
 
     public function download(Request $request)
